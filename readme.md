@@ -41,8 +41,21 @@ Destroy containers
 
 `docker rm $(docker ps -a -q)`
 
+Destroy images
+
+`docker image rm $(docker image ls -q) -f`
+
 Clean stuff
+
 `docker-sync-stack clean`
 
 Change the docker-sync.yml to include verbose option
 Try a different syncing strat (rsync or native_osx)
+
+Back up your database:
+
+`docker exec db /usr/bin/mysqldump -u root SS_mysite > backup.sql`
+
+Restore your database:
+
+`docker exec -i db /usr/bin/mysql -u root SS_mysite < backup.sql`
