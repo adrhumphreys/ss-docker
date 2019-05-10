@@ -11,26 +11,34 @@ rbenv global 2.6.3
 ```
 
 Install [docker-sync](https://github.com/EugenMayer/docker-sync)
+
 `gem install docker-sync`
 
 Install [unison](https://www.cis.upenn.edu/~bcpierce/unison/) and unox
+
 `brew install unison`
+
 `brew install eugenmayer/dockersync/unox`
 
 Clone your website into `app`
+
 `git clone yah.repo.com app`
 
 Start the sync service
+
 `docker-sync start`
 
 Start the web service
+
 `docker-compose up -d`
 
 ### Commands to run when shit hits the fans:
 Kill containers
+
 `docker kill $(docker ps -q)`
 
 Destroy containers
+
 `docker rm $(docker ps -a -q)`
 
 Clean stuff
