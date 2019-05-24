@@ -1,24 +1,20 @@
-# tell docker what version of the docker-compose.yml we're using
 version: '3'
 
-# define the network
 networks:
   web-network:
 
-# start the services section
 services:
   docker-nginx:
     build: 
       context: ./nginx
-    # defines the port mapping
-    # corresponds to the "-p" flag
     ports:
       - "8080:80"
     tty: true
     volumes:
-      - appcode-sync:/var/www:nocopy
-      # - ./app:/var/www:cached
+      - appcode:/var/www
       - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - docker-php-fpm
     networks:
       - web-network
 
@@ -27,11 +23,14 @@ services:
       context: ./php-fpm
     tty: true
     volumes:
-      - appcode-sync:/var/www:nocopy
-      # - ./app:/var/www:cached
+      - appcode:/var/www
       - ./.env:/var/www/.env:ro
+      - ./php-fpm/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - db
     networks:
       - web-network
+
   db:
     image: mysql:5
     command: --default-authentication-plugin=mysql_native_password
@@ -45,7 +44,23 @@ services:
     networks:
       - web-network
 
+  sspak:
+    build: 
+      context: ./snapshots
+    depends_on:
+      - db
+    networks:
+      - web-network
+    volumes:
+      - "./snapshots:/app/snapshots:rw"
+      - ./.env:/app/www/.env:ro
+      - "appcode:/app/www:ro"
+
 volumes:
   db-data:
-  appcode-sync:
-    external: true
+  appcode:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+      device: ":/Users/ahumphreys/Sites/dockerism/app/"  # location on nfs server of file/dir you want to mount

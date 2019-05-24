@@ -1,24 +1,4 @@
 ## Install
-You'll want to clone this sucker down and then wish it made things actually faster
-
-You'll need ruby, if you don't have it then run the following
-```
-brew install rbenv
-rbenv init
-# copy it to your ~/.zshrc or whatever you use
-rbenv install 2.6.3
-rbenv global 2.6.3
-```
-
-Install [docker-sync](https://github.com/EugenMayer/docker-sync)
-
-`gem install docker-sync`
-
-Install [unison](https://www.cis.upenn.edu/~bcpierce/unison/) and unox
-
-`brew install unison`
-
-`brew install eugenmayer/dockersync/unox`
 
 Clone your website into `app`
 
@@ -59,3 +39,8 @@ Back up your database:
 Restore your database:
 
 `docker exec -i db /usr/bin/mysql -u root SS_mysite < backup.sql`
+
+
+`php vendor/silverstripe/framework/cli-script.php dev/build`
+
+`docker-compose exec docker-php-fpm php ../vendor/silverstripe/framework/cli-script.php dev/build`
