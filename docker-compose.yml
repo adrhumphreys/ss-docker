@@ -4,7 +4,7 @@ networks:
   web-network:
 
 services:
-  docker-nginx:
+  web:
     build: 
       context: ./nginx
     ports:
@@ -14,11 +14,11 @@ services:
       - appcode:/var/www
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
-      - docker-php-fpm
+      - php
     networks:
       - web-network
 
-  docker-php-fpm:
+  php:
     build: 
       context: ./php-fpm
     tty: true
@@ -30,6 +30,10 @@ services:
       - db
     networks:
       - web-network
+    environment:
+      - SS_ENVIRONMENT_TYPE=dev
+      - SS_DEFAULT_ADMIN_USERNAME=admin
+      - SS_DEFAULT_ADMIN_PASSWORD=password
 
   db:
     image: mysql:5
